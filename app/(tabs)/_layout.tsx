@@ -1,35 +1,61 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Platform } from "react-native";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+function TabsInner() {
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+        tabBarStyle: {
+          backgroundColor: "#0b1220",
+          borderTopColor: "rgba(255,255,255,0.08)",
+          // deixa espaço pros botões virtuais/gestos:
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingTop: 6,
+          height: (Platform.OS === "android" ? 56 : 64) + Math.max(insets.bottom, 0),
+        },
+        tabBarActiveTintColor: "#60a5fa",
+        tabBarInactiveTintColor: "#cbd5e1",
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Início",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Sobre",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "compass" : "compass-outline"} size={22} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="results"
+        options={{
+          href: null, // não aparece na barra
+          title: "Resultados",
         }}
       />
     </Tabs>
+  );
+}
+
+export default function Layout() {
+  return (
+    <SafeAreaProvider>
+      <TabsInner />
+    </SafeAreaProvider>
   );
 }
