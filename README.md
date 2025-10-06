@@ -1,50 +1,101 @@
-# Welcome to your Expo app 👋
+# 🌌 Plêiades – Planejamento Climático Inteligente
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+O **Plêiades** é um aplicativo mobile desenvolvido com **React Native (Expo)** que ajuda você a escolher o melhor dia e horário para atividades ao ar livre (praia, trilha, pesca, fotografia, etc.), utilizando **dados históricos da NASA POWER API**.
 
-## Get started
+Ele calcula probabilidades de calor, frio, chuva, vento, umidade e desconforto térmico, e permite que a comunidade contribua com **check-ins climáticos** para validar e enriquecer os dados.  
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 🚀 Funcionalidades
 
-2. Start the app
+- 📍 **Busca por local**: Use o GPS ou pesquise locais pelo nome (ex.: "Ponta Verde, Maceió").
+- 📅 **Consulta personalizada**: Informe data, período do dia ou horário específico.
+- 🔎 **Perfis de atividade**: Praia, trilha, pesca, fotografia, urbano.
+- 📊 **Probabilidades históricas**: Gráficos e percentuais claros para cada condição climática.
+- 📈 **Aplicar tendências**: Ajuste das probabilidades com base nos últimos anos.
+- 🌟 **Sugestão de melhores dias (7 dias)**: Veja quais datas próximas têm as condições mais favoráveis.
+- ✍️ **Check-in Climático**: Usuários podem registrar como o tempo realmente estava, criando dados colaborativos.
+- 💾 **Armazenamento local (Proof of Concept)**: Simulação de contribuição comunitária sem backend.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🛠️ Tecnologias Utilizadas
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **React Native + Expo**
+- **TypeScript**
+- **Expo Router**
+- **AsyncStorage** (check-ins locais)
+- **Expo Location** (GPS)
+- **NASA POWER API** (dados climáticos abertos)
+- **Nominatim (OpenStreetMap)** (autocomplete de locais)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 📦 Instalação e Uso
 
-When you're ready, run:
+### 1. Clonar o repositório
+```bash
+git clone https://github.com/SANDIEGOVIEIRA/Pleiades.git
+cd Pleiades
+````
+
+### 2. Instalar dependências
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3. Rodar em desenvolvimento
 
-## Learn more
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+* **Android**: abra no **Expo Go** escaneando o QR code.
+* **iOS**: use a câmera para escanear o QR code e abrir no Expo Go.(se não apresentar opção de scanear basca copiar o endereço que apresenta no terminal e abrir com navegador do celular)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 4. Gerar APK para testes
 
-## Join the community
+```bash
+eas build -p android --profile preview
+```
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📱 Testar sem instalar dependências
+
+Se você não quiser rodar localmente, também disponibilizamos o APK pronto nos Releases do GitHub.
+Basta baixar, instalar no seu dispositivo Android e testar o aplicativo imediatamente.
+
+---
+
+## 📱 Testando no iPhone
+
+1. Instale o app **Expo Go** na App Store.
+2. Escaneie o QR code gerado pelo comando `npx expo start`.
+3. O app abrirá direto, sem necessidade de build nativa.
+
+---
+
+## 📊 Exemplos de Uso
+
+* Consultar previsão histórica para **praia em Maceió** → escolher melhor horário.
+* Filtrar por **tarde** e aplicar **tendência recente**.
+* Obter os **3 melhores dias nos próximos 7**.
+* Fazer um **check-in climático** para comparar observação real x dado histórico.
+
+---
+
+## 📚 Critérios Atendidos no Hackathon
+
+* **Inovação**: Check-in climático comunitário e gamificação futura.
+* **Impacto**: Ajuda pessoas comuns a planejar atividades e evita riscos climáticos.
+* **Uso de Dados**: Integração direta com NASA POWER + contribuições de usuários.
+* **Execução**: Protótipo funcional completo (consulta, filtros, check-in, sugestões).
+* **Apresentação**: Interface intuitiva, clara e envolvente.
+
+---
+
+## 👨‍💻 Autoria
+
+Desenvolvido por **Sandiego, Eduardo, Kelly, Thomas, Khettryenn** da equipe Plêiades no desafio NASA Space Apps 2025 - Recife.
