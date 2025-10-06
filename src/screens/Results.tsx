@@ -413,7 +413,7 @@ export default function Results({ query, onBack }: Props) {
   );
 }
 
-// ===== utils
+// utils
 function splitBaseRecent(samples: ClimateSample[], fracRecent = 0.3) {
   const withYear = samples.filter((s) => typeof s.year === "number");
   if (!withYear.length)

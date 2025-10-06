@@ -35,10 +35,10 @@ export type Thresholds = {
   veryWindyMs: number;
   veryWetMm: number;
   veryUncomfortableHI: number;
-  veryHighRad: number; // NOVO (ex.: >= 18 MJ/m²/dia ou >= 700 W/m² horário)
+  veryHighRad: number; 
 };
 
-// ---------- Helpers ----------
+// Helpers 
 function clampPct(n: number) {
   return Math.max(0, Math.min(100, Math.round(n)));
 }
@@ -60,7 +60,7 @@ export function heatIndexC(tC: number, rh: number) {
   return (HI_F - 32) * 5/9;
 }
 
-// ---------- Resumo diário ----------
+// Resumo diário 
 export function summarizeProbabilities(
   samples: ClimateSample[],
   th: Thresholds
@@ -94,7 +94,7 @@ export function summarizeProbabilities(
   };
 }
 
-// ---------- Resumo horário/período ----------
+//  Resumo horário/período
 export function summarizeByHour(
   samples: ClimateHourlySample[],
   th: Thresholds
@@ -137,7 +137,7 @@ export function summarizeByHour(
   };
 }
 
-// ---------- Tendência (mistura simples com delta) ----------
+//Tendência (mistura simples com delta)
 export function applyTrendAdjust(current: Summary, recent: Summary) {
   const mix = (a:number,b:number,w=0.3)=> Math.round(a*(1-w)+b*w);
   const adjusted: Summary = {
@@ -159,7 +159,7 @@ export function applyTrendAdjust(current: Summary, recent: Summary) {
   return { adjusted, delta };
 }
 
-// ---------- Score de adequação (para "janela ótima") ----------
+// Score de adequação (para "janela ótima")
 export type Weights = {
   hot: number; cold: number; wind: number; wet: number; uncf: number; rad: number;
 };

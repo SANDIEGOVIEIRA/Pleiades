@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 260, // ajuste a altura do hero aqui
+    height: 260,
     width: '100%',
     opacity: 0.96
   },

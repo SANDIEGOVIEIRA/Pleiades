@@ -1,4 +1,3 @@
-// src/lib/checkin.ts
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type CheckInTag =
@@ -22,7 +21,6 @@ export type CheckIn = {
     veryUncomfortable: number;
     veryHighRad?: number;
   };
-  // percepção do usuário
   tags: CheckInTag[];
   notes?: string;
 };

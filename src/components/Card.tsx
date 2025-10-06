@@ -1,4 +1,3 @@
-// src/components/Card.tsx
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -39,7 +38,6 @@ export default function Card({ title, percent, tip }: Props) {
   );
 }
 
-// mapeia ícones pelo título (simples e efetivo)
 function pickIcon(title: string): any {
   const t = title.toLowerCase();
   if (t.includes("quente")) return "thermometer-full";

@@ -14,7 +14,6 @@ function TabsInner() {
         tabBarStyle: {
           backgroundColor: "#0b1220",
           borderTopColor: "rgba(255,255,255,0.08)",
-          // deixa espaço pros botões virtuais/gestos:
           paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 6,
           height: (Platform.OS === "android" ? 56 : 64) + Math.max(insets.bottom, 0),
@@ -44,7 +43,7 @@ function TabsInner() {
       <Tabs.Screen
         name="results"
         options={{
-          href: null, // não aparece na barra
+          href: null,
           title: "Resultados",
         }}
       />

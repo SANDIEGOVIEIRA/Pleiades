@@ -1,5 +1,4 @@
 // Helpers estatísticos e Heat Index
-
 export function probabilityOver(values: number[], threshold: number) {
   const n = values.length || 1;
   const hits = values.filter((v) => v > threshold).length;

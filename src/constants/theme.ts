@@ -1,6 +1,4 @@
-// src/constants/theme.ts
 export const theme = {
-  // Azul “brand” (pode ajustar depois)
   primary: "#2563EB",
   primaryDark: "#1D4ED8",
 
@@ -14,10 +12,10 @@ export const theme = {
 
   // Cores por risco
   risk: {
-    low: "#10B981",      // verde
-    mid: "#F59E0B",      // amarelo
-    high: "#EF4444",     // vermelho
-    accent: "#38BDF8"    // azul-claro (opcional)
+    low: "#10B981",      
+    mid: "#F59E0B",      
+    high: "#EF4444",    
+    accent: "#38BDF8"    
   },
 
   radius: {
@@ -29,7 +27,6 @@ export const theme = {
 
   shadow: {
     card: {
-      // sombra leve que funciona bem no RN
       shadowColor: "#000",
       shadowOpacity: 0.25,
       shadowRadius: 8,
@@ -39,7 +36,6 @@ export const theme = {
   },
 };
 
-// helper para cor por % (0–100)
 export function riskColor(p: number) {
   if (p >= 51) return theme.risk.high;
   if (p >= 26) return theme.risk.mid;

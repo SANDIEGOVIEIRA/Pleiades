@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import * as Location from "expo-location";
 import React, { useMemo, useState } from "react";
@@ -16,6 +17,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import InputRow from "../components/InputRow";
+import PlaceAutocomplete from "../components/PlaceAutocomplete";
 import { theme } from "../constants/theme";
 import { profiles } from "../lib/profiles";
 
@@ -66,7 +68,10 @@ export default function Home({ onSubmit }: Props) {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert("Permissão", "Precisamos da sua permissão para acessar a localização.");
+        Alert.alert(
+          "Permissão",
+          "Precisamos da sua permissão para acessar a localização."
+        );
         return;
       }
       const pos = await Location.getCurrentPositionAsync({});
@@ -111,9 +116,57 @@ export default function Home({ onSubmit }: Props) {
       accessibilityRole="button"
       accessibilityState={{ selected: !!active }}
     >
-      <Text style={[styles.chipText, active && styles.chipTextActive]}>{children}</Text>
+      <Text style={[styles.chipText, active && styles.chipTextActive]}>
+        {children}
+      </Text>
     </TouchableOpacity>
   );
+
+  //  helpers de ajuda, adicionei alguns comentarios para melhor compreenção
+  const TitleWithInfo = ({
+    children,
+    onInfo,
+  }: {
+    children: React.ReactNode;
+    onInfo: () => void;
+  }) => (
+    <View style={styles.titleRow}>
+      <Text style={styles.labelSmall}>{children}</Text>
+      <TouchableOpacity onPress={onInfo} style={styles.infoBtn}>
+        <Ionicons name="help-circle-outline" size={18} color="#AFC6FF" />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const explainProfile = () =>
+    Alert.alert(
+      "Perfil de atividade",
+      "Ajusta os limiares usados nos cálculos. Ex.: “praia” tolera mais calor e menos vento; “trilha” favorece temperaturas amenas; “urbano” penaliza calor/umidade altos; “fotografia” considera radiação."
+    );
+
+  const explainPeriod = () =>
+    Alert.alert(
+      "Período do dia",
+      "Opcional. Foca a análise em manhã/tarde/noite/madrugada. Se não selecionar, consideramos o dia todo (ou uma hora exata se ativar o filtro abaixo)."
+    );
+
+  const explainHour = () =>
+    Alert.alert(
+      "Horário específico",
+      "Ative para escolher uma hora exata (0–23). Útil quando planeja a atividade num horário definido."
+    );
+
+  const explainTrend = () =>
+    Alert.alert(
+      "Aplicar tendência (recentes vs base)",
+      "Compara amostras mais recentes com a base histórica e ajusta as probabilidades (ex.: se os últimos anos estão mais chuvosos para esta data, aumentamos levemente a chance de chuva)."
+    );
+
+  const explainRecommend = () =>
+    Alert.alert(
+      "Sugerir melhores dias (próximos 7)",
+      "Varremos os próximos 7 dias para este local, com o mesmo perfil/limiares, e listamos os dias com melhor score de conforto."
+    );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }}>
@@ -125,21 +178,34 @@ export default function Home({ onSubmit }: Props) {
           contentContainerStyle={[
             styles.container,
             {
-              paddingTop: insets.top + 4,        // afasta do topo/status bar
-              paddingBottom: (insets.bottom || 0) + 24, // evita sobrepor a Tab Bar
+              paddingTop: insets.top + 4,
+              paddingBottom: (insets.bottom || 0) + 24,
             },
           ]}
           keyboardShouldPersistTaps="handled"
         >
           <Text style={styles.h1}>Plêiades</Text>
           <Text style={styles.subtitle}>
-            Consulte probabilidades históricas por atividade, período do dia e local.
+            Consulte probabilidades históricas por atividade, período do dia e
+            local.
           </Text>
 
           {/* ONDE & QUANDO */}
           <Text style={styles.section}>ONDE & QUANDO</Text>
 
-          <InputRow label="Rótulo (opcional)">
+          {/* Auto-complete de lugar */}
+          <PlaceAutocomplete
+            placeholder="Buscar local (ex.: Ponta Verde, Maceió)"
+            initialText={label}
+            onPick={(p) => {
+              setLabel(p.label);
+              setLat(p.lat);
+              setLon(p.lon);
+            }}
+          />
+
+          {/* rótulo opcional */}
+          <InputRow label="Rótulo (opcional)" labelColor="#C8D4EA">
             <TextInput
               value={label}
               onChangeText={setLabel}
@@ -149,13 +215,16 @@ export default function Home({ onSubmit }: Props) {
             />
           </InputRow>
 
+          {/* lat/lon manuais ainda disponíveis */}
           <View style={styles.row2}>
             <View style={{ flex: 1, marginRight: 8 }}>
-              <InputRow label="Latitude">
+              <InputRow label="Latitude" labelColor="#C8D4EA">
                 <TextInput
                   keyboardType="numeric"
                   value={String(lat)}
-                  onChangeText={(t) => setLat(Number(t.replace(",", ".")) || 0)}
+                  onChangeText={(t) =>
+                    setLat(Number(t.replace(",", ".")) || 0)
+                  }
                   placeholder="-9.5656"
                   placeholderTextColor={theme.textSoft}
                   style={styles.input}
@@ -163,11 +232,13 @@ export default function Home({ onSubmit }: Props) {
               </InputRow>
             </View>
             <View style={{ flex: 1 }}>
-              <InputRow label="Longitude">
+              <InputRow label="Longitude" labelColor="#C8D4EA">
                 <TextInput
                   keyboardType="numeric"
                   value={String(lon)}
-                  onChangeText={(t) => setLon(Number(t.replace(",", ".")) || 0)}
+                  onChangeText={(t) =>
+                    setLon(Number(t.replace(",", ".")) || 0)
+                  }
                   placeholder="-35.7512"
                   placeholderTextColor={theme.textSoft}
                   style={styles.input}
@@ -178,7 +249,7 @@ export default function Home({ onSubmit }: Props) {
 
           <View style={styles.row2}>
             <View style={{ flex: 1, marginRight: 8 }}>
-              <InputRow label="Data (YYYY-MM-DD)">
+              <InputRow label="Data (YYYY-MM-DD)" labelColor="#C8D4EA">
                 <TextInput
                   value={dateISO}
                   onChangeText={setDateISO}
@@ -197,7 +268,7 @@ export default function Home({ onSubmit }: Props) {
           {/* PERSONALIZE */}
           <Text style={styles.section}>PERSONALIZE A CONSULTA</Text>
 
-          <Text style={styles.labelSmall}>Perfil de atividade</Text>
+          <TitleWithInfo onInfo={explainProfile}>Perfil de atividade</TitleWithInfo>
           <View style={styles.chipsWrap}>
             {Object.keys(profiles).map((k) => (
               <Chip key={k} active={k === profileKey} onPress={() => setProfileKey(k)}>
@@ -206,7 +277,9 @@ export default function Home({ onSubmit }: Props) {
             ))}
           </View>
 
-          <Text style={[styles.labelSmall, { marginTop: 10 }]}>Período do dia (opcional)</Text>
+          <TitleWithInfo onInfo={explainPeriod}>
+            Período do dia (opcional)
+          </TitleWithInfo>
           <View style={styles.chipsWrap}>
             <Chip active={!period} onPress={() => setPeriod(undefined)}>
               nenhum
@@ -214,7 +287,10 @@ export default function Home({ onSubmit }: Props) {
             <Chip active={period === "morning"} onPress={() => setPeriod("morning")}>
               manhã
             </Chip>
-            <Chip active={period === "afternoon"} onPress={() => setPeriod("afternoon")}>
+            <Chip
+              active={period === "afternoon"}
+              onPress={() => setPeriod("afternoon")}
+            >
               tarde
             </Chip>
             <Chip active={period === "night"} onPress={() => setPeriod("night")}>
@@ -225,8 +301,17 @@ export default function Home({ onSubmit }: Props) {
             </Chip>
           </View>
 
-          <View style={styles.switchRow}>
-            <Text style={styles.switchLabel}>Filtrar por horário específico</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.labelSmall}>Filtrar por horário específico</Text>
+            <TouchableOpacity onPress={explainHour} style={styles.infoBtn}>
+              <Ionicons name="help-circle-outline" size={18} color="#AFC6FF" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.switchRowNaked}>
+            <Text style={[styles.switchLabel, { flex: 1 }]}>
+              Defina uma hora exata (0–23). Se desligado, usamos o dia inteiro
+              ou o período escolhido acima.
+            </Text>
             <Switch
               value={useHour}
               onValueChange={(v) => {
@@ -251,8 +336,14 @@ export default function Home({ onSubmit }: Props) {
             </>
           )}
 
-          <View style={styles.switchRow}>
-            <Text style={styles.switchLabel}>Aplicar tendência (recentes vs base)</Text>
+          {/* ---- Aplicar tendência ---- */}
+          <TitleWithInfo onInfo={explainTrend}>
+            Aplicar tendência (recentes vs base)
+          </TitleWithInfo>
+          <View style={styles.switchRowNaked}>
+            <Text style={[styles.switchLabel, { flex: 1 }]}>
+              Ajusta as probabilidades com base no comportamento recente.
+            </Text>
             <Switch
               value={trendOn}
               onValueChange={setTrendOn}
@@ -261,8 +352,14 @@ export default function Home({ onSubmit }: Props) {
             />
           </View>
 
-          <View style={styles.switchRow}>
-            <Text style={styles.switchLabel}>Sugerir melhores dias (próximos 7)</Text>
+          {/* ---- Sugerir melhores dias ---- */}
+          <TitleWithInfo onInfo={explainRecommend}>
+            Sugerir melhores dias (próximos 7)
+          </TitleWithInfo>
+          <View style={styles.switchRowNaked}>
+            <Text style={[styles.switchLabel, { flex: 1 }]}>
+              Lista os dias com melhor score nos próximos 7.
+            </Text>
             <Switch
               value={recommend7d}
               onValueChange={setRecommend7d}
@@ -323,7 +420,14 @@ const styles = StyleSheet.create({
   },
   locBtnText: { color: theme.text, fontWeight: "700" },
 
-  labelSmall: { color: theme.textSoft, fontWeight: "700", marginBottom: 6 },
+  labelSmall: {
+    color: "#C8D4EA",
+    fontWeight: "700",
+    marginBottom: 6,
+  },
+
+  titleRow: { flexDirection: "row", alignItems: "center", marginTop: 10 },
+  infoBtn: { marginLeft: 6, padding: 4 },
 
   chipsWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
 
@@ -342,15 +446,13 @@ const styles = StyleSheet.create({
   chipText: { color: theme.text, fontWeight: "700" },
   chipTextActive: { color: "#fff", fontWeight: "800" },
 
-  switchRow: {
-    marginTop: 12,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: theme.border,
+  switchRowNaked: {
+    marginTop: 8,
+    marginBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: 12,
   },
   switchLabel: { color: theme.text, fontWeight: "700" },
 
